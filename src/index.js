@@ -18,8 +18,10 @@ app.get('/operations/healthcheck', (req, res) => {
   res.send('ok')
 })
 
-app.listen(3000, () => {
-  console.log('Server listening...')
+const PORT = 3030
+
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`)
 })
 
 process.on('SIGINT', process.exit)
