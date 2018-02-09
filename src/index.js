@@ -1,5 +1,6 @@
-const express = require('express')
-const { performance } = require('perf_hooks')
+import express from 'express'
+import { performance } from 'perf_hooks'
+import { getHelloWorld } from './data'
 
 const app = express()
 
@@ -15,7 +16,8 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-  res.send('hello world')
+  const message = getHelloWorld()
+  res.send(message)
 })
 
 app.get('/operations/healthcheck', (req, res) => {
