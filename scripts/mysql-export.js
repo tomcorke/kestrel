@@ -1,5 +1,6 @@
 const mysql = require('mysql')
 const minimist = require('minimist')
+const fs = require('fs')
 
 const args = minimist(process.argv.slice(2))
 
@@ -25,12 +26,32 @@ const database = args.database || args.db || args.d || args._[4] || defaults.mys
 
 const conn = mysql.createConnection({
   host: mysqlHost,
-  port: mysqlPort,
   user: username,
   password: password,
   database: database
 })
 
 conn.connect()
+
+const getTables = () => new Promise((resolve, reject) => {
+    conn.query('SHOW TABLES', (err, results, fields) => {
+        if (err) { return reject(err) }
+        const field = fields[0].name;
+        const tables = results.map(result => result[field])
+        resolve(tables)
+    })
+})
+
+const getPosts = () => new Promise((resolve, reject) => {
+    conn.query('SELECT * FROM wp_posts', (err, results, fields) => {
+        if (err) { return reject(err) }
+        resolve(results)
+    })
+})
+
+getPosts()
+    .then(posts => new Promise((resolve) => {
+        fs.writeFile('./posts.json', JSON.stringify(posts, null, 2), resolve)
+    }))
 
 conn.end()
