@@ -1,0 +1,10 @@
+{
+    "ravelry": {
+        "username": "",
+        "password": "",
+        "storeId": 0,
+    },
+    "instagram": {
+        "userId": 0
+    }
+}

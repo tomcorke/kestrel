@@ -1,6 +1,8 @@
 import express from 'express'
 import { performance } from 'perf_hooks'
 import { getHelloWorld } from './data'
+import { patternsHandler } from './handlers/patterns'
+import { instagramHandler } from './handlers/instagram'
 
 const app = express()
 
@@ -14,6 +16,9 @@ app.use((req, res, next) => {
 
   next()
 })
+
+app.get('/patterns', patternsHandler)
+app.get('/instagram', instagramHandler)
 
 app.get('/', (req, res) => {
   const message = getHelloWorld()
