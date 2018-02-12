@@ -11,7 +11,7 @@ function getAuthorizationHeader () {
   }
 }
 
-function getPatternDetails (ids) {
+async function getPatternDetails (ids) {
   const url = `https://api.ravelry.com/patterns.json?ids=${ids.join('+')}`
   const headers = getAuthorizationHeader()
   return request({
@@ -21,22 +21,23 @@ function getPatternDetails (ids) {
   })
 }
 
-export function getPatterns () {
+export async function getPatterns () {
   const url = `https://api.ravelry.com/stores/${storeId}/products.json`
   const headers = getAuthorizationHeader()
-  return request({
+
+  const products = await request({
     url,
     headers,
     json: true
-  }).then(products => {
-    const ids = products.products.map(product => product.sku.substr(3))
-    return getPatternDetails(ids)
-      .then(details => {
-        Object.keys(details.patterns).forEach(id => {
-          const product = products.products.find(p => p.sku.substr(3) === id)
-          product.details = details.patterns[id]
-        })
-        return products
-      })
   })
+
+  const ids = products.products.map(product => product.sku.substr(3))
+
+  const details = await getPatternDetails(ids)
+  Object.keys(details.patterns).forEach(id => {
+    const product = products.products.find(p => p.sku.substr(3) === id)
+    product.details = details.patterns[id]
+  })
+
+  return products
 }

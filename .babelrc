@@ -1,6 +1,10 @@
 {
   "presets": [
-    "env"
+    ["env", {
+      "targets": {
+        "node": "8.9.4"
+      }
+    }]
   ],
   "plugins": [
     "transform-object-rest-spread"
