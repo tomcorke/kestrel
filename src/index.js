@@ -1,28 +1,35 @@
 import express from 'express'
-import { performance } from 'perf_hooks'
-import { getHelloWorld } from './data'
-import { patternsHandler } from './handlers/patterns'
+import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
+
+import { responseTime } from './middleware/response-time'
+import { checkAuthentication, requireAuthentication } from './middleware/authentication'
+
+import { patternsHandler, patternImagesHandler } from './handlers/patterns'
 import { instagramHandler } from './handlers/instagram'
+import { adminHandler } from './handlers/admin'
+import { loginHandler, loginPostHandler } from './handlers/login'
+import { redirect } from './handlers/redirect'
 
 const app = express()
 
-app.use((req, res, next) => {
-  const start = performance.now()
+app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(responseTime)
+app.use(checkAuthentication)
 
-  res.on('finish', () => {
-    const time = performance.now() - start
-    console.log(`${res.statusCode} ${Math.round(time)}ms ${req.url}`)
-  })
-
-  next()
-})
-
+app.get('/patterns/images/:fileName', patternImagesHandler)
 app.get('/patterns', patternsHandler)
 app.get('/instagram', instagramHandler)
 
+app.get('/admin/login', loginHandler)
+app.post('/admin/login', loginPostHandler)
+app.get('/admin', redirect('/admin/index'))
+app.get('/admin/:path', requireAuthentication, adminHandler)
+
 app.get('/', (req, res) => {
-  const message = getHelloWorld()
-  res.send(message)
+  res.send('Hello world')
 })
 
 app.get('/operations/healthcheck', (req, res) => {
