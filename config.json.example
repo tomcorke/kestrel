@@ -2,9 +2,12 @@
     "ravelry": {
         "username": "",
         "password": "",
-        "storeId": 0,
+        "storeId": 0
     },
     "instagram": {
         "userId": 0
-    }
+    },
+    "users": [
+        { "username": "", "password": "" }
+    ]
 }
