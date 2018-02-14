@@ -15,8 +15,8 @@ async function createPatternImage (pattern, width, height) {
 
   const photo = pattern.firstPhoto
 
-  const newPath = path.resolve(__dirname, `../../images/patterns/${patternFileName}`)
-  const newUrl = `/images/patterns/${patternFileName}`
+  const newPath = path.resolve(__dirname, `../../images/patterns/g/${patternFileName}`)
+  const newUrl = `/images/patterns/g/${patternFileName}`
 
   const largePhoto = photo.sizes.find(size => size.key === 'large')
   const largePhotoUrl = largePhoto.url
