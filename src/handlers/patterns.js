@@ -5,7 +5,13 @@ import fs from 'fs'
 
 const TIME_HASH = new Date().getTime().toString(16)
 
-export function patternsHandler (req, res) {
+export function patternsJsonHandler (req, res) {
+  ravelry
+    .getPatterns()
+    .then(patterns => res.json(patterns))
+}
+
+export function patternIndexHandler (req, res) {
   if (req.query.json) { return patternsJsonHandler(req, res) }
   ravelry
     .getPatterns()
@@ -89,10 +95,20 @@ export function patternsHandler (req, res) {
     })
 }
 
-export function patternsJsonHandler (req, res) {
+export function patternHandler (req, res) {
+  const id = req.params.id
   ravelry
     .getPatterns()
-    .then(patterns => res.json(patterns))
+    .then(patterns => {
+      const pattern = patterns.products.find(pattern => {
+        return pattern.id === +id ||
+          pattern.title.toLowerCase().replace(/\s/g, '-') === `${id}`.toLowerCase()
+      })
+      if (!pattern) {
+        return res.status(404).send('Pattern not found')
+      }
+      return res.json(pattern)
+    })
 }
 
 export function patternImagesHandler (req, res) {

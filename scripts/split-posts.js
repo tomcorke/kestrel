@@ -61,7 +61,7 @@ const remainingPostIds = Object.keys(postsById).map(id => +id).slice()
 
 remainingPostIds.forEach(id => {
   const post = postsById[id]
-  const filePath = path.resolve(__dirname, `../posts/${id}.json`)
+  const filePath = path.resolve(__dirname, `../posts/exported/${id}.json`)
   writeFile(filePath, JSON.stringify(post, null, 2))
 })
 
@@ -75,7 +75,8 @@ const postIndex = remainingPostIds.reduce((index, id) => {
       id,
       title: post.post_title,
       name: post.post_name,
-      date: post.post_date
+      date: post.post_date,
+      path: `exported/${id}.json`
     }
   }
 }, {})

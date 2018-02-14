@@ -10,15 +10,15 @@ const postIndexArray = Object.keys(postIndex)
 const postCache = new LruCache()
 const postLoaders = {}
 
-function loadPostById (id) {
-  const loader = postLoaders[id] || new Promise((resolve, reject) => {
-    const postPath = path.resolve(__dirname, `../../posts/${id}.json`)
+function loadPost (post) {
+  const loader = postLoaders[post.id] || new Promise((resolve, reject) => {
+    const postPath = path.resolve(__dirname, '../../posts/', post.path || `${post.id}.json`)
     fs.readFile(postPath, 'utf8', (err, contents) => {
       if (err) { reject(err) }
       resolve(JSON.parse(contents))
     })
   })
-  postLoaders[id] = loader
+  postLoaders[post.id] = loader
   return loader
 }
 
@@ -66,8 +66,7 @@ export async function postHandler (req, res) {
       if (req.path !== postByName.canonicalPath) {
         return res.redirect(postByName.canonicalPath)
       }
-      const postId = postByName.id
-      loader = loadPostById(postId)
+      loader = loadPost(postByName)
     }
   }
 

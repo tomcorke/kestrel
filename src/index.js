@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 import { responseTime } from './middleware/response-time'
 import { checkAuthentication, requireAuthentication } from './middleware/authentication'
 
-import { patternsHandler, patternImagesHandler } from './handlers/patterns'
+import { patternIndexHandler, patternImagesHandler, patternHandler } from './handlers/patterns'
 import { instagramHandler } from './handlers/instagram'
 import { adminHandler } from './handlers/admin'
 import { loginHandler, loginPostHandler } from './handlers/login'
@@ -21,17 +21,20 @@ app.use(responseTime)
 app.use(checkAuthentication)
 
 app.get('/patterns/images/:fileName', patternImagesHandler)
-app.get('/patterns', patternsHandler)
+app.get('/patterns', patternIndexHandler)
+app.get('/pattern/:id', requireAuthentication, patternHandler)
 
 app.get('/instagram', instagramHandler)
 
 app.get('/posts', postIndexHandler)
+app.get('/post/create', redirect('/admin/post/create'))
 app.get('/post/:postId', postHandler)
 
 app.get('/admin/login', loginHandler)
 app.post('/admin/login', loginPostHandler)
+
 app.get('/admin', redirect('/admin/index'))
-app.get('/admin/:path', requireAuthentication, adminHandler)
+app.get('/admin/:path*', requireAuthentication, adminHandler)
 
 app.get('/:postName', postHandler)
 

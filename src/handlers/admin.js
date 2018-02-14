@@ -1,5 +1,4 @@
 export function adminHandler (req, res) {
-  const path = req.params.path
-  console.log(`admin path: ${path}`)
-  res.send(`admin path: ${path}, auth: ${JSON.stringify(res.locals.auth)}`)
+  const cmdPath = req.path.split('/').slice(2)
+  res.send(`admin path: "${cmdPath}" - auth: ${JSON.stringify(res.locals.auth)}`)
 }
