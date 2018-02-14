@@ -26,12 +26,14 @@ app.get('/patterns', patternsHandler)
 app.get('/instagram', instagramHandler)
 
 app.get('/posts', postIndexHandler)
-app.get('/post/:id', postHandler)
+app.get('/post/:postId', postHandler)
 
 app.get('/admin/login', loginHandler)
 app.post('/admin/login', loginPostHandler)
 app.get('/admin', redirect('/admin/index'))
 app.get('/admin/:path', requireAuthentication, adminHandler)
+
+app.get('/:postName', postHandler)
 
 app.get('/', (req, res) => {
   res.send('Hello world')

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import LruCache from 'lru-cache'
 import path from 'path'
-
+import { getTemplate } from '../helpers/templates'
 import postIndex from '../../posts/index.json'
 
 const postIndexArray = Object.keys(postIndex)
@@ -22,23 +22,50 @@ function loadPostById (id) {
   return loader
 }
 
-function renderPost (req, res, post) {
-  res.send(`<html><head><title>${post.post_title}</title></head><body><div class="post">${post.post_content}</div></body></html>`)
+async function renderPost (req, res, post) {
+  const context = {
+    title: post.post_title,
+    body: post.post_content
+  }
+  const template = await getTemplate('post')
+  res.send(template(context))
+}
+
+function getPostMeta (postIndexData) {
+  if (!postIndexData) { return }
+  return {
+    ...postIndexData,
+    canonicalPath: `/post/${postIndexData.name}`,
+    permaPath: `/post/${postIndexData.id}`
+  }
+}
+
+function getPostById (id) {
+  return getPostMeta(postIndex[id])
+}
+
+function getPostByName (name) {
+  return getPostMeta(postIndexArray.find(post => post.name.toLowerCase() === name.toLowerCase()))
 }
 
 export async function postHandler (req, res) {
-  const id = req.params.id
+  const id = req.params.postId
+  const name = req.params.postName || id
 
   if (postCache.has(id)) {
     return renderPost(req, res, postCache.get(id))
   }
 
   let loader
-  if (postIndex[id]) {
-    loader = loadPostById(id)
+  const post = getPostById(id)
+  if (post) {
+    return res.redirect(post.canonicalPath)
   } else {
-    const postByName = postIndexArray.find(post => post.name.toLowerCase() === id.toLowerCase())
+    const postByName = getPostByName(name)
     if (postByName) {
+      if (req.path !== postByName.canonicalPath) {
+        return res.redirect(postByName.canonicalPath)
+      }
       const postId = postByName.id
       loader = loadPostById(postId)
     }
@@ -47,8 +74,8 @@ export async function postHandler (req, res) {
   if (!loader) {
     return res.status(404).send('post not found')
   }
-  const post = await loader
-  renderPost(req, res, post)
+  const postData = await loader
+  return renderPost(req, res, postData)
 }
 
 export function postIndexHandler (req, res) {

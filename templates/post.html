@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>lizcorke.com - {{title}}</title>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .post-body {
+
+        max-width: 900px;
+        white-space: pre-wrap;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .post-body img {
+        margin: 1em;
+      }
+      .post-body img[align=left],
+      .post-body img.alignleft {
+        float: left;
+        margin: 0 1em 1em 0;
+      }
+      .post-body img[align=right],
+      .post-body img.alignright {
+        float: right;
+        margin: 0 0 1em 1em;
+      }
+      .post-body img[align=center] {
+        text-align: center;
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="post">
+      <div class="post-title">
+        <h1>{{title}}</h1>
+      </div>
+      <div class="post-body">
+        {{{body}}}
+      </div>
+    </div>
+  </body>
+</html>
