@@ -21,7 +21,7 @@ app.use(responseTime)
 app.use(checkAuthentication)
 
 app.get('/patterns/images/:fileName', patternImagesHandler)
-app.get('/patterns', patternIndexHandler)
+app.get('/patterns', requireAuthentication, patternIndexHandler)
 app.get('/pattern/:id', requireAuthentication, patternHandler)
 
 app.get('/instagram', instagramHandler)
