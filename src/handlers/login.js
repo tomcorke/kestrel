@@ -42,3 +42,8 @@ export async function loginPostHandler (req, res) {
   }
   return loginHandler(req, res)
 }
+
+export function logoutHandler (req, res) {
+  res.clearCookie('authToken')
+  res.redirect('/')
+}
