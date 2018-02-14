@@ -21,12 +21,13 @@ function doLogin (req, res, username) {
   return doRedirect(req, res)
 }
 
-export async function loginHandler (req, res) {
+export async function loginHandler (req, res, { message }) {
   if (res.locals.auth) {
     return doRedirect(req, res)
   }
 
   const context = {
+    message,
     loginUrl: req.url
   }
 
@@ -40,7 +41,11 @@ export async function loginPostHandler (req, res) {
   if (user) {
     return doLogin(req, res, user.username)
   }
-  return loginHandler(req, res)
+
+  // Delay login by random time to prevent spamming
+  await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 200))
+
+  return loginHandler(req, res, { message: 'Incorrect login details' })
 }
 
 export function logoutHandler (req, res) {
