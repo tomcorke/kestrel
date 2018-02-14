@@ -9,6 +9,7 @@ import { patternsHandler, patternImagesHandler } from './handlers/patterns'
 import { instagramHandler } from './handlers/instagram'
 import { adminHandler } from './handlers/admin'
 import { loginHandler, loginPostHandler } from './handlers/login'
+import { postHandler, postIndexHandler } from './handlers/posts'
 import { redirect } from './handlers/redirect'
 
 const app = express()
@@ -21,7 +22,11 @@ app.use(checkAuthentication)
 
 app.get('/patterns/images/:fileName', patternImagesHandler)
 app.get('/patterns', patternsHandler)
+
 app.get('/instagram', instagramHandler)
+
+app.get('/posts', postIndexHandler)
+app.get('/post/:id', postHandler)
 
 app.get('/admin/login', loginHandler)
 app.post('/admin/login', loginPostHandler)
