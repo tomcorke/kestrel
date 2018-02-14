@@ -2,14 +2,25 @@
 <html>
   <head>
     <title>lizcorke.com - {{title}}</title>
+
+    {{{includes.styles}}}
+
     <style>
-      body {
+      .body-wrap {
+        width: 100%;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
+      .post-title h1 {
+        font-family: 'Bilbo Swash Caps';
+        font-weight: normal;
+        font-size: 50px;
+        margin: 1.5em 0 1em;
+        padding: 0;
+      }
       .post-body {
-
         max-width: 900px;
         white-space: pre-wrap;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -31,16 +42,29 @@
         text-align: center;
         clear: both;
       }
+      .post-body ul {
+        white-space: normal;
+        padding-left: 2em;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
-    <div class="post">
-      <div class="post-title">
-        <h1>{{title}}</h1>
+
+    {{{includes.header}}}
+
+    <div class="body-wrap">
+
+      <div class="post">
+        <div class="post-title">
+          <h1>{{title}}</h1>
+        </div>
+        <div class="post-body">
+          {{{body}}}
+        </div>
       </div>
-      <div class="post-body">
-        {{{body}}}
-      </div>
+
     </div>
+
   </body>
 </html>

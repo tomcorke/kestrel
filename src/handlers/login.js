@@ -31,7 +31,7 @@ export async function loginHandler (req, res) {
   }
 
   const template = await getTemplate('login')
-  res.send(template(context))
+  res.send(await template.render(context))
 }
 
 export async function loginPostHandler (req, res) {

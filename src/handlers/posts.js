@@ -28,7 +28,7 @@ async function renderPost (req, res, post) {
     body: post.post_content
   }
   const template = await getTemplate('post')
-  res.send(template(context))
+  res.send(await template.render(context))
 }
 
 function getPostMeta (postIndexData) {
