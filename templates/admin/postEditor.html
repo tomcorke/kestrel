@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>lizcorke.com{{#if title}} - {{title}}{{/if}}</title>
+
+    {{{includes.styles}}}
+
+    <style>
+      .body-wrap {
+        max-width: 1800px;
+        padding: 2em 0 5em;
+        display: flex;
+      }
+      .post-edit-form {
+        flex: 1 1 auto;
+      }
+      .post-preview {
+        flex: 1 0 900px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    {{{includes.header}}}
+
+    <div class="body-wrap">
+
+      <div class="post-edit-form">
+
+        <form method="post" action="{{{formUrl}}}">
+
+          <div class="short-fields">
+
+            <div class="field">
+              <label for="post[id]">ID:</label>
+              <input type="text" name="post[id]" value="{{post.id}}" />
+            </div>
+
+            <div class="field">
+              <label for="post[title]">Title:</label>
+              <input type="text" name="post[title]" value="{{post.title}}" />
+            </div>
+
+            <div class="field">
+              <label for="post[name]">Name:</label>
+              <input type="text" name="post[name]" value="{{post.name}}" />
+            </div>
+
+          </div>
+
+          <label for="post[content]">Content:</label>
+          <textarea name="post[content]">
+            {{post.content}}
+          </textarea>
+
+          <input type="submit" value="Save" />
+        </form>
+
+      </div>
+
+      <div class="post-preview">
+        <div class="preview">
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+</html>

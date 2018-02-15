@@ -8,7 +8,7 @@ import { checkAuthentication, requireAuthentication } from './middleware/authent
 
 import { patternIndexHandler, patternHandler } from './handlers/patterns'
 import { instagramHandler } from './handlers/instagram'
-import { adminHandler } from './handlers/admin'
+import { adminHandler, adminPostHandler } from './handlers/admin'
 import { loginHandler, loginPostHandler, logoutHandler } from './handlers/login'
 import { postHandler, postIndexHandler } from './handlers/posts'
 import { redirect } from './handlers/redirect'
@@ -39,6 +39,7 @@ app.get('/admin/logout', logoutHandler)
 
 app.get('/admin', redirect('/admin/index'))
 app.get('/admin/:path*', requireAuthentication, adminHandler)
+app.post('/admin/:path*', requireAuthentication, adminPostHandler)
 
 app.get('/:postName', postHandler)
 

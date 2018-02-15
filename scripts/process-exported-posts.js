@@ -60,7 +60,10 @@ const remainingPostIds = Object.keys(postsById).map(id => +id).slice()
 // Write to files!
 
 remainingPostIds.forEach(id => {
-  const post = postsById[id]
+  const post = {
+    ...postsById[id],
+    format: 'wordpress-exported'
+  }
   const filePath = path.resolve(__dirname, `../posts/exported/${id}.json`)
   writeFile(filePath, JSON.stringify(post, null, 2))
 })

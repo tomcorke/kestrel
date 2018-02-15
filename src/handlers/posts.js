@@ -3,6 +3,9 @@ import LruCache from 'lru-cache'
 import path from 'path'
 import { getTemplate } from '../helpers/templates'
 import postIndex from '../../posts/index.json'
+import Showdown from 'showdown'
+
+const showdown = new Showdown.Converter()
 
 const postIndexArray = Object.keys(postIndex)
   .map(id => postIndex[id])
@@ -11,22 +14,42 @@ const postCache = new LruCache()
 const postLoaders = {}
 
 function loadPost (post) {
-  const loader = postLoaders[post.id] || new Promise((resolve, reject) => {
+  if (postLoaders[post.id]) {
+    return postLoaders[post.id]
+  }
+
+  const loader = new Promise((resolve, reject) => {
     const postPath = path.resolve(__dirname, '../../posts/', post.path || `${post.id}.json`)
     fs.readFile(postPath, 'utf8', (err, contents) => {
       if (err) { reject(err) }
       resolve(JSON.parse(contents))
     })
   })
+
   postLoaders[post.id] = loader
+
   return loader
 }
 
-async function renderPost (req, res, post) {
-  const context = {
-    title: post.post_title,
-    body: post.post_content
+async function getPostRenderContext (post) {
+  switch (post.format) {
+    case 'wordpress-exported':
+      return {
+        title: post.post_title,
+        body: post.post_content
+      }
+    case 'kestrel-markdown':
+      return {
+        title: post.title,
+        body: showdown.makeHtml(post.content)
+      }
+    default:
+      throw Error(`Unsupported post format for post ID ${post.id}: "${post.format}"`)
   }
+}
+
+async function renderPost (req, res, post) {
+  const context = await getPostRenderContext(post)
   const template = await getTemplate('post')
   res.send(await template.render(context))
 }
